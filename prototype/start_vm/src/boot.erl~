@@ -1,0 +1,38 @@
+%%% -------------------------------------------------------------------
+%%% Author  : uabjle
+%%% Description : dbase using dets 
+%%%
+%%% Created : 10 dec 2012
+%%% -------------------------------------------------------------------
+-module(boot).
+
+%% --------------------------------------------------------------------
+%% Include files
+%% --------------------------------------------------------------------
+%%  -include("").
+%% --------------------------------------------------------------------
+%% External exports
+-compile(export_all).
+
+
+
+%% ====================================================================
+%% External functions
+%% ====================================================================
+start()->
+    spawn(fun()->start_vm("vm_1") end),
+    spawn(fun()->start_vm("vm_2") end),
+
+    D=date(),
+    D=rpc:call('vm_1@joq-desktop',erlang,date,[]),
+    D=rpc:call('vm_2@joq-desktop',erlang,date,[]),
+    
+    D=rpc:call('vm_1@joq-desktop',erlang,halt,[]),
+    D=rpc:call('vm_2@joq-desktop',erlang,halt,[]),
+    
+    ok.
+
+start_vm(Node)->
+    ErlCmd="erl -pa "++Node++"/ebin"++" -s a start -sname "++Node++" -detached", 
+    os:cmd(ErlCmd),
+    ok.

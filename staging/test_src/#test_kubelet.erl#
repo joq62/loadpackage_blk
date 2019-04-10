@@ -1,0 +1,49 @@
+%%% -------------------------------------------------------------------
+%%% Author  : uabjle
+%%% Description : dbase using dets 
+%%%
+%%% Created : 10 dec 2012
+%%% -------------------------------------------------------------------
+-module(test_kubelet).
+ 
+%% --------------------------------------------------------------------
+%% Include files
+%% --------------------------------------------------------------------
+-include_lib("eunit/include/eunit.hrl").
+
+-include("src/kubelet_local.hrl").
+
+-include("../../include/kubelet_data.hrl").
+-include("../../include/dns_data.hrl").
+-include("../../include/loader.hrl").
+%% --------------------------------------------------------------------
+
+%% External exports
+
+-export([]).
+
+
+%% ====================================================================
+%% External functions
+%% ====================================================================
+%% --------------------------------------------------------------------
+%% Function:init 
+%% Description:
+%% Returns: non
+%% --------------------------------------------------------------------
+init_test()->
+    {ok,L}=file:consult("kubelet.config"),
+    
+
+    ok=application:set_env(Application,ip_addr,NodeIp),
+    ok=application:set_env(Application,port,NodePort),
+    ok=application:set_env(Application,application_id,ApplicationId),
+    ok=application:set_env(Application,dns_ip_addr,DnsIp),
+    ok=application:set_env(Application,dns_port,DnsPort),
+    {exported_services,ExportedServices}=lists:keyfind(exported_services,1,JoscaInfo),
+    ok=application:set_env(Application,exported_services,ExportedServices),
+    ok=application:set_env(Application,git_url,GitUrl),
+    
+    PathR=code:add_path(?LOADPACKAGE++ApplicationId),
+    R=application:start(Application),
+    NewAcc=[{R,PathR}|Acc]

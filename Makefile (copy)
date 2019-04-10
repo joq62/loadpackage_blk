@@ -1,0 +1,122 @@
+## set the paths for a default setup
+all:
+#
+#	Infrastructure
+
+##-------- Start Service ------------------
+#service
+
+# loadpackage
+
+# testnode
+
+##-------- End Service ---------------------
+
+##-------- Clean up staging -----------------
+#
+	erlc -o staging/all_ebin  infra_kube/dns/src/*.erl;
+	rm staging/all_ebin/*;
+#
+##-------- Start loader --------------------------------
+# compile
+	erlc -o loadpackage/loader  infra_kube/loader/src/*.erl;
+	cp infra_kube/loader/src/*.app loadpackage/loader;
+	rm loadpackage/loader/*.beam;
+	rm loadpackage/loader/*.app;
+	erlc -o loadpackage/loader  infra_kube/loader/src/*.erl;
+	cp infra_kube/loader/src/*.app loadpackage/loader;
+# staging
+	cp loadpackage/loader/*.beam staging/loader/ebin;
+	rm staging/loader/ebin/*;
+	erlc -o staging/loader/test_ebin staging/loader/test_src/*.erl;
+	cp loadpackage/loader/* staging/loader/ebin;
+	cp loadpackage/loader/* staging/all_ebin;
+##-------- End loader ------------------------------------
+#
+#
+##-------- Start controller --------------------------------
+# compile
+	erlc -o loadpackage/controller  infra_kube/controller/src/*.erl;
+	cp infra_kube/controller/src/*.app loadpackage/controller;
+	rm loadpackage/controller/*.beam;
+	rm loadpackage/controller/*.app;
+	erlc -o loadpackage/controller  infra_kube/controller/src/*.erl;
+	cp infra_kube/controller/src/*.app loadpackage/controller;
+# staging
+	cp loadpackage/controller/*.beam staging/controller/ebin;
+	rm staging/controller/ebin/*;
+	erlc -o staging/controller/test_ebin staging/controller/test_src/*.erl;
+	cp loadpackage/controller/* staging/controller/ebin;
+	cp loadpackage/controller/* staging/all_ebin;
+##-------- End controller ------------------------------------
+#
+##-------- Start kubelet --------------------------------
+# compile
+	erlc -o loadpackage/kubelet  infra_kube/kubelet/src/*.erl;
+	cp infra_kube/kubelet/src/*.app loadpackage/kubelet;
+	rm loadpackage/kubelet/*.beam;
+	rm loadpackage/kubelet/*.app;
+	erlc -o loadpackage/kubelet  infra_kube/kubelet/src/*.erl;
+	cp infra_kube/kubelet/src/*.app loadpackage/kubelet;
+# staging
+	cp loadpackage/kubelet/*.beam staging/kubelet/ebin;
+	rm staging/kubelet/ebin/*;
+	erlc -o staging/kubelet/test_ebin staging/kubelet/test_src/*.erl;
+	cp loadpackage/kubelet/* staging/kubelet/ebin;
+	cp loadpackage/kubelet/* staging/all_ebin;
+##-------- End kubelet ------------------------------------
+##-------- Start dns --------------------------------
+# compile
+	erlc -o loadpackage/dns  infra_kube/dns/src/*.erl;
+	cp infra_kube/dns/src/*.app loadpackage/dns;
+	rm loadpackage/dns/*.beam;
+	rm loadpackage/dns/*.app;
+	erlc -o loadpackage/dns  infra_kube/dns/src/*.erl;
+	cp infra_kube/dns/src/*.app loadpackage/dns;
+# staging
+	cp loadpackage/dns/*.beam staging/dns/ebin;
+	rm staging/dns/ebin/*;
+	erlc -o staging/dns/test_ebin staging/dns/test_src/*.erl;
+	cp loadpackage/dns/* staging/dns/ebin;
+	cp loadpackage/dns/* staging/all_ebin;
+##-------- End dns ------------------------------------
+#
+##-------- Start lib --------------------------------
+# compile
+	erlc -o loadpackage/lib  infra_kube/lib/src/*.erl;
+	cp infra_kube/lib/src/*.app loadpackage/lib;
+	rm loadpackage/lib/*.beam;
+	rm loadpackage/lib/*.app;
+	erlc -o loadpackage/lib  infra_kube/lib/src/*.erl;
+	cp infra_kube/lib/src/*.app loadpackage/lib;
+# staging
+	cp loadpackage/lib/*.beam staging/lib/ebin;
+	rm staging/lib/ebin/*;
+	erlc -o staging/lib/test_ebin staging/lib/test_src/*.erl ;
+	cp loadpackage/lib/* staging/lib/ebin;
+	cp loadpackage/lib/* staging/all_ebin;
+##-------- End lib ------------------------------------
+#
+##-------- Start repo --------------------------------
+# compile
+	erlc -o loadpackage/repo  infra_kube/repo/src/*.erl;
+	cp infra_kube/repo/src/*.app loadpackage/repo;
+	rm loadpackage/repo/*.beam;
+	rm loadpackage/repo/*.app;
+	erlc -o loadpackage/repo  infra_kube/repo/src/*.erl;
+	cp infra_kube/repo/src/*.app loadpackage/repo;
+# staging
+	cp loadpackage/repo/*.beam staging/repo/ebin;
+	rm staging/repo/ebin/*;
+	erlc -o staging/repo/test_ebin staging/repo/test_src/*.erl;
+	cp loadpackage/repo/* staging/repo/ebin;
+	cp loadpackage/repo/* staging/all_ebin;
+	cp staging/repo/test_ebin/* staging/all_ebin;
+##-------- End repo ------------------------------------
+#
+#---------------- End Makefile------------------
+	echo  OK OK 0K  Build_succeded  OK OK OK;
+#--------------------------------------------------------
+# Unit test
+	erlc -o test_ebin test_src/*.erl;
+	erl -pa staging/*/* -pa test_ebin -s test_infra start -sname test_infra
