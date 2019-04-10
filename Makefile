@@ -138,6 +138,24 @@ infra:
 	cp loadpackage_infra_kube/lib/* staging/unit_test/lib/ebin;
 ##-------- End lib ------------------------------------
 #
+##-------- Start monitor --------------------------------
+# compile
+	erlc -o loadpackage_infra_kube/monitor  infra_kube/monitor/src/*.erl;
+	cp infra_kube/monitor/src/*.app loadpackage_infra_kube/monitor;
+	rm loadpackage_infra_kube/monitor/*.beam;
+	rm loadpackage_infra_kube/monitor/*.app;
+	erlc -o loadpackage_infra_kube/monitor  infra_kube/monitor/src/*.erl;
+	cp infra_kube/monitor/src/*.app loadpackage_infra_kube/monitor;
+# staging
+	cp loadpackage_infra_kube/monitor/*.beam staging/unit_test/monitor/ebin;
+	rm staging/unit_test/monitor/ebin/*;
+	erlc -o staging/unit_test/monitor/ebin infra_kube/monitor/test_src/*.erl;
+	cp loadpackage_infra_kube/lib/* staging/unit_test/monitor/ebin;
+	cp loadpackage_infra_kube/monitor/* staging/unit_test/monitor/ebin;
+#
+##-------- End monitor ------------------------------------
+##
+#
 ##-------- Start build local --------------------------------
 #
 #node_master 
