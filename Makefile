@@ -151,7 +151,8 @@ infra:
 	rm staging/unit_test/monitor/ebin/*;
 	erlc -o staging/unit_test/monitor/ebin infra_kube/monitor/test_src/*.erl;
 	cp loadpackage_infra_kube/lib/* staging/unit_test/monitor/ebin;
-	cp loadpackage_infra_kube/monitor/* staging/unit_test/monitor/ebin;
+	cp loadpackage_infra_kube/monitor/* staging/local/node_monitor/ebin;
+
 #
 ##-------- End monitor ------------------------------------
 ##
@@ -170,6 +171,11 @@ infra:
 #node_rpi_2 
 	rm staging/local/node_rpi_2/loader/*;
 	cp loadpackage_infra_kube/loader/* staging/local/node_rpi_2/loader;
+#
+#node_monitor 
+	rm staging/local/node_monitor/ebin/*;
+	cp loadpackage_infra_kube/monitor/* staging/local/node_monitor/ebin;
+	cp loadpackage_infra_kube/lib/* staging/local/node_monitor/ebin;
 #
 ##-------- End build local ------------------------------------
 #
